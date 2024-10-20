@@ -55,8 +55,8 @@ function App() {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-md">
-      <Card>
+    <div className="container mx-auto p-4">
+      <Card className="w-96 mx-auto">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">Todo App</CardTitle>
         </CardHeader>
@@ -67,52 +67,60 @@ function App() {
               value={newTodo}
               onChange={(e) => setNewTodo(e.target.value)}
               placeholder="Add a new todo"
-              className="flex-grow"
+              className="flex-grow min-w-0"
             />
-            <Button onClick={addTodo}>
+            <Button onClick={addTodo} className="flex-shrink-0">
               <PlusCircle className="mr-2 h-4 w-4" /> Add
             </Button>
           </div>
-          <ScrollArea className="h-[300px]">
+          <ScrollArea className="h-[300px] pr-4">
             <ul className="space-y-2">
               {todos.map(todo => (
                 <li key={todo.id} className="flex items-center space-x-2">
-                  {editingId === todo.id ? (
-                    <>
+                  <div className="flex items-center space-x-2 w-full">
+                    <Checkbox
+                      checked={todo.completed}
+                      onCheckedChange={() => toggleTodo(todo.id)}
+                      id={`todo-${todo.id}`}
+                      className="flex-shrink-0"
+                    />
+                    {editingId === todo.id ? (
                       <Input
                         type="text"
                         value={editText}
                         onChange={(e) => setEditText(e.target.value)}
-                        className="flex-grow"
+                        className="flex-grow min-w-0"
                       />
-                      <Button size="icon" onClick={saveEdit}>
-                        <Check className="h-4 w-4" />
-                      </Button>
-                      <Button size="icon" variant="outline" onClick={cancelEdit}>
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Checkbox
-                        checked={todo.completed}
-                        onCheckedChange={() => toggleTodo(todo.id)}
-                        id={`todo-${todo.id}`}
-                      />
+                    ) : (
                       <label
                         htmlFor={`todo-${todo.id}`}
-                        className={`flex-grow ${todo.completed ? 'line-through text-gray-500' : ''}`}
+                        className={`flex-grow truncate ${todo.completed ? 'line-through text-gray-500' : ''}`}
                       >
                         {todo.text}
                       </label>
-                      <Button size="icon" variant="outline" onClick={() => startEditing(todo.id, todo.text)}>
-                        <Edit2 className="h-4 w-4" />
-                      </Button>
-                      <Button variant="destructive" size="icon" onClick={() => deleteTodo(todo.id)}>
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </>
-                  )}
+                    )}
+                    <div className="flex-shrink-0 flex space-x-1">
+                      {editingId === todo.id ? (
+                        <>
+                          <Button size="icon" onClick={saveEdit}>
+                            <Check className="h-4 w-4" />
+                          </Button>
+                          <Button size="icon" variant="outline" onClick={cancelEdit}>
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button size="icon" variant="outline" onClick={() => startEditing(todo.id, todo.text)}>
+                            <Edit2 className="h-4 w-4" />
+                          </Button>
+                          <Button variant="destructive" size="icon" onClick={() => deleteTodo(todo.id)}>
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </div>
                 </li>
               ))}
             </ul>
